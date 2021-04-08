@@ -1,0 +1,15 @@
+\subsubsection usage Usage
+\verbatim
+<node name="viconros" pkg="viconros" type="viconros">
+  <param name="Log_to_file_once" type="bool" value="False" />
+  <param name="Enable_log_to_file" type="bool" value="False" />
+  <param name="Correct_start" type="bool" value="False" />
+  <param name="EV_POS_X" type="double" value="0.0" />
+  <param name="EV_POS_Y" type="double" value="0.0" />
+  <param name="EV_POS_Z" type="double" value="0.0" />
+  <param name="BIAS_POS_X" type="double" value="-0.0253" />
+  <param name="BIAS_POS_Y" type="double" value="0.002817" />
+  <param name="BIAS_POS_Z" type="double" value="0.406226" />
+</node>
+\endverbatim
+

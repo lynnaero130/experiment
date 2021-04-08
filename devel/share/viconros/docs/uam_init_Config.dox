@@ -1,0 +1,14 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~Log_to_file_once" : \b [bool] Log_to_file_once min: False, default: False, max: True
+- \b "~Enable_log_to_file" : \b [bool] Enable_log_to_file min: False, default: False, max: True
+- \b "~Correct_start" : \b [bool] Enable_Correcting min: False, default: False, max: True
+- \b "~EV_POS_X" : \b [double] Deviation_X_for_Forward(m) min: -1.0, default: 0.0, max: 1.0
+- \b "~EV_POS_Y" : \b [double] Deviation_Y_for_Right(m) min: -1.0, default: 0.0, max: 1.0
+- \b "~EV_POS_Z" : \b [double] Deviation_Z_for_Down(m) min: -1.0, default: 0.0, max: 1.0
+- \b "~BIAS_POS_X" : \b [double] BIAS_X_for_world(m) min: -1.0, default: -0.0253, max: 1.0
+- \b "~BIAS_POS_Y" : \b [double] BIAS_Y_for_world(m) min: -1.0, default: 0.002817, max: 1.0
+- \b "~BIAS_POS_Z" : \b [double] BIAS_Z_for_world(m) min: -1.0, default: 0.406226, max: 1.0
+

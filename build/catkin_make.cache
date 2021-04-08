@@ -1,0 +1,2 @@
+offb_posctl:viconros
+-DCATKIN_DEVEL_PREFIX=/home/uav/lzy_ws/devel -DCMAKE_INSTALL_PREFIX=/home/uav/lzy_ws/install -G Unix Makefiles

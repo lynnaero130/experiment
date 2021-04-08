@@ -1,0 +1,10 @@
+\subsubsection usage Usage
+\verbatim
+<node name="viconros" pkg="viconros" type="viconros">
+  <param name="Correct_start" type="bool" value="False" />
+  <param name="EV_POS_X" type="double" value="-0.21" />
+  <param name="EV_POS_Y" type="double" value="0.0" />
+  <param name="EV_POS_Z" type="double" value="-0.19" />
+</node>
+\endverbatim
+

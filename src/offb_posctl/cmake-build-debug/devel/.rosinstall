@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/uav/lzy_ws/src/offb_posctl/cmake-build-debug/devel/setup.sh

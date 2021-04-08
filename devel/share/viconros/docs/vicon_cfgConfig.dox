@@ -1,0 +1,9 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~Correct_start" : \b [bool] Enable_Correcting min: False, default: False, max: True
+- \b "~EV_POS_X" : \b [double] Deviation_X_for_Forward(m) min: -1.0, default: -0.21, max: 1.0
+- \b "~EV_POS_Y" : \b [double] Deviation_Y_for_Right(m) min: -1.0, default: 0.0, max: 1.0
+- \b "~EV_POS_Z" : \b [double] Deviation_Z_for_Down(m) min: -1.0, default: -0.19, max: 1.0
+

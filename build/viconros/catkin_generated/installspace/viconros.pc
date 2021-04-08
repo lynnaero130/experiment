@@ -1,0 +1,8 @@
+prefix=/home/uav/lzy_ws/install
+
+Name: viconros
+Description: Description of viconros
+Version: 0.0.0
+Cflags: -I/home/uav/lzy_ws/install/include
+Libs: -L/home/uav/lzy_ws/install/lib 
+Requires: 
