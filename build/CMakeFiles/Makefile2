@@ -411,6 +411,7 @@ clean: gtest/googlemock/gtest/CMakeFiles/gtest.dir/clean
 offb_posctl/all: offb_posctl/CMakeFiles/offb_posctl.dir/all
 offb_posctl/all: offb_posctl/CMakeFiles/thelib.dir/all
 offb_posctl/all: offb_posctl/CMakeFiles/offb_posctl_gencfg.dir/all
+offb_posctl/all: offb_posctl/CMakeFiles/test.dir/all
 offb_posctl/all: offb_posctl/CMakeFiles/offb_posctl_generate_messages.dir/all
 
 .PHONY : offb_posctl/all
@@ -476,6 +477,7 @@ offb_posctl/clean: offb_posctl/CMakeFiles/nav_msgs_generate_messages_cpp.dir/cle
 offb_posctl/clean: offb_posctl/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/clean
 offb_posctl/clean: offb_posctl/CMakeFiles/sensor_msgs_generate_messages_py.dir/clean
 offb_posctl/clean: offb_posctl/CMakeFiles/nav_msgs_generate_messages_lisp.dir/clean
+offb_posctl/clean: offb_posctl/CMakeFiles/test.dir/clean
 offb_posctl/clean: offb_posctl/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/clean
 offb_posctl/clean: offb_posctl/CMakeFiles/_offb_posctl_generate_messages_check_deps_controlstate.dir/clean
 offb_posctl/clean: offb_posctl/CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/clean
@@ -1228,7 +1230,7 @@ clean: offb_posctl/CMakeFiles/roscpp_generate_messages_lisp.dir/clean
 offb_posctl/CMakeFiles/thelib.dir/all:
 	$(MAKE) -f offb_posctl/CMakeFiles/thelib.dir/build.make offb_posctl/CMakeFiles/thelib.dir/depend
 	$(MAKE) -f offb_posctl/CMakeFiles/thelib.dir/build.make offb_posctl/CMakeFiles/thelib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=22,23,24 "Built target thelib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=24,25,26 "Built target thelib"
 .PHONY : offb_posctl/CMakeFiles/thelib.dir/all
 
 # Include target in all.
@@ -2450,6 +2452,43 @@ clean: offb_posctl/CMakeFiles/nav_msgs_generate_messages_lisp.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target offb_posctl/CMakeFiles/test.dir
+
+# All Build rule for target.
+offb_posctl/CMakeFiles/test.dir/all: offb_posctl/CMakeFiles/thelib.dir/all
+	$(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/depend
+	$(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=22,23 "Built target test"
+.PHONY : offb_posctl/CMakeFiles/test.dir/all
+
+# Include target in all.
+all: offb_posctl/CMakeFiles/test.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+offb_posctl/CMakeFiles/test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/uav/lzy_ws/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 offb_posctl/CMakeFiles/test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/uav/lzy_ws/build/CMakeFiles 0
+.PHONY : offb_posctl/CMakeFiles/test.dir/rule
+
+# Convenience name for target.
+test: offb_posctl/CMakeFiles/test.dir/rule
+
+.PHONY : test
+
+# clean rule for target.
+offb_posctl/CMakeFiles/test.dir/clean:
+	$(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/clean
+.PHONY : offb_posctl/CMakeFiles/test.dir/clean
+
+# clean rule for target.
+clean: offb_posctl/CMakeFiles/test.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target offb_posctl/CMakeFiles/nav_msgs_generate_messages_nodejs.dir
 
 # All Build rule for target.
@@ -3365,7 +3404,7 @@ viconros/CMakeFiles/viconros_generate_messages_cpp.dir/all: offb_posctl/CMakeFil
 viconros/CMakeFiles/viconros_generate_messages_cpp.dir/all: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir/all
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_cpp.dir/build.make viconros/CMakeFiles/viconros_generate_messages_cpp.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_cpp.dir/build.make viconros/CMakeFiles/viconros_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=30 "Built target viconros_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=32 "Built target viconros_generate_messages_cpp"
 .PHONY : viconros/CMakeFiles/viconros_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -3429,7 +3468,7 @@ clean: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir
 viconros/CMakeFiles/viconros.dir/all:
 	$(MAKE) -f viconros/CMakeFiles/viconros.dir/build.make viconros/CMakeFiles/viconros.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros.dir/build.make viconros/CMakeFiles/viconros.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=25,26,27 "Built target viconros"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=27,28,29 "Built target viconros"
 .PHONY : viconros/CMakeFiles/viconros.dir/all
 
 # Include target in all.
@@ -3468,7 +3507,7 @@ viconros/CMakeFiles/viconros_generate_messages_eus.dir/all: offb_posctl/CMakeFil
 viconros/CMakeFiles/viconros_generate_messages_eus.dir/all: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir/all
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_eus.dir/build.make viconros/CMakeFiles/viconros_generate_messages_eus.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_eus.dir/build.make viconros/CMakeFiles/viconros_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=31,32 "Built target viconros_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=33,34 "Built target viconros_generate_messages_eus"
 .PHONY : viconros/CMakeFiles/viconros_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
@@ -3532,7 +3571,7 @@ clean: viconros/CMakeFiles/viconros_gennodejs.dir/clean
 viconros/CMakeFiles/viconros_gencfg.dir/all:
 	$(MAKE) -f viconros/CMakeFiles/viconros_gencfg.dir/build.make viconros/CMakeFiles/viconros_gencfg.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_gencfg.dir/build.make viconros/CMakeFiles/viconros_gencfg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=28,29 "Built target viconros_gencfg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=30,31 "Built target viconros_gencfg"
 .PHONY : viconros/CMakeFiles/viconros_gencfg.dir/all
 
 # Include target in all.
@@ -3644,7 +3683,7 @@ viconros/CMakeFiles/viconros_generate_messages_lisp.dir/all: offb_posctl/CMakeFi
 viconros/CMakeFiles/viconros_generate_messages_lisp.dir/all: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir/all
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_lisp.dir/build.make viconros/CMakeFiles/viconros_generate_messages_lisp.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_lisp.dir/build.make viconros/CMakeFiles/viconros_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=33 "Built target viconros_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=35 "Built target viconros_generate_messages_lisp"
 .PHONY : viconros/CMakeFiles/viconros_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -3678,7 +3717,7 @@ viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/all: offb_posctl/CMake
 viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/all: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir/all
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/build.make viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/build.make viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=34 "Built target viconros_generate_messages_nodejs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=36 "Built target viconros_generate_messages_nodejs"
 .PHONY : viconros/CMakeFiles/viconros_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -3712,7 +3751,7 @@ viconros/CMakeFiles/viconros_generate_messages_py.dir/all: offb_posctl/CMakeFile
 viconros/CMakeFiles/viconros_generate_messages_py.dir/all: viconros/CMakeFiles/_viconros_generate_messages_check_deps_viconmocap.dir/all
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_py.dir/build.make viconros/CMakeFiles/viconros_generate_messages_py.dir/depend
 	$(MAKE) -f viconros/CMakeFiles/viconros_generate_messages_py.dir/build.make viconros/CMakeFiles/viconros_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=35,36 "Built target viconros_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/uav/lzy_ws/build/CMakeFiles --progress-num=37,38 "Built target viconros_generate_messages_py"
 .PHONY : viconros/CMakeFiles/viconros_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.

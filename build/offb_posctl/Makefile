@@ -124,17 +124,6 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
 # The main all target
 all: cmake_check_build_system
 	cd /home/uav/lzy_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/uav/lzy_ws/build/CMakeFiles /home/uav/lzy_ws/build/offb_posctl/CMakeFiles/progress.marks
@@ -1068,6 +1057,21 @@ nav_msgs_generate_messages_lisp/fast:
 .PHONY : nav_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
+offb_posctl/CMakeFiles/test.dir/rule:
+	cd /home/uav/lzy_ws/build && $(MAKE) -f CMakeFiles/Makefile2 offb_posctl/CMakeFiles/test.dir/rule
+.PHONY : offb_posctl/CMakeFiles/test.dir/rule
+
+# Convenience name for target.
+test: offb_posctl/CMakeFiles/test.dir/rule
+
+.PHONY : test
+
+# fast build rule for target.
+test/fast:
+	cd /home/uav/lzy_ws/build && $(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/build
+.PHONY : test/fast
+
+# Convenience name for target.
 offb_posctl/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule:
 	cd /home/uav/lzy_ws/build && $(MAKE) -f CMakeFiles/Makefile2 offb_posctl/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule
 .PHONY : offb_posctl/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule
@@ -1538,6 +1542,33 @@ src/offb_posctl.cpp.s:
 	cd /home/uav/lzy_ws/build && $(MAKE) -f offb_posctl/CMakeFiles/offb_posctl.dir/build.make offb_posctl/CMakeFiles/offb_posctl.dir/src/offb_posctl.cpp.s
 .PHONY : src/offb_posctl.cpp.s
 
+src/test.o: src/test.cpp.o
+
+.PHONY : src/test.o
+
+# target to build an object file
+src/test.cpp.o:
+	cd /home/uav/lzy_ws/build && $(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/src/test.cpp.o
+.PHONY : src/test.cpp.o
+
+src/test.i: src/test.cpp.i
+
+.PHONY : src/test.i
+
+# target to preprocess a source file
+src/test.cpp.i:
+	cd /home/uav/lzy_ws/build && $(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/src/test.cpp.i
+.PHONY : src/test.cpp.i
+
+src/test.s: src/test.cpp.s
+
+.PHONY : src/test.s
+
+# target to generate assembly for a file
+src/test.cpp.s:
+	cd /home/uav/lzy_ws/build && $(MAKE) -f offb_posctl/CMakeFiles/test.dir/build.make offb_posctl/CMakeFiles/test.dir/src/test.cpp.s
+.PHONY : src/test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1646,6 +1677,9 @@ help:
 	@echo "... src/offb_posctl.o"
 	@echo "... src/offb_posctl.i"
 	@echo "... src/offb_posctl.s"
+	@echo "... src/test.o"
+	@echo "... src/test.i"
+	@echo "... src/test.s"
 .PHONY : help
 
 

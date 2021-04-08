@@ -54,6 +54,8 @@ add_library(thelib
 
 add_executable(offb_posctl src/offb_posctl.cpp )
 target_link_libraries(offb_posctl ${catkin_LIBRARIES} thelib)
+add_executable(test src/test.cpp )
+target_link_libraries(test ${catkin_LIBRARIES} thelib)
 
 
 

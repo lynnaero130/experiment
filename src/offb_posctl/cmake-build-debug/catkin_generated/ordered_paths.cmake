@@ -1,1 +1,0 @@
-set(ORDERED_PATHS "/home/uav/mavros_ws/devel/.private/mavros/lib;/home/uav/mavros_ws/devel/.private/libmavconn/lib;/opt/ros/melodic/lib")
