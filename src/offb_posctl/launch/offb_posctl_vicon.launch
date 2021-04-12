@@ -20,7 +20,7 @@
 <!--            file="$(find offb_posctl)/param/param_vicon1029.yaml" command="load"-->
 <!--            />-->
     </node>
-
+    <node pkg="rosbag" type="record" name="rosbag_record_msgs" args="record -a -o /home/uav/lzy_ws/src/offb_posctl/log/line " output="screen"> </node>
     <!--启动rqt曲线观测及参数调整器-->
 <!--    <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot"> </node>-->
 <!--    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure"> </node>-->

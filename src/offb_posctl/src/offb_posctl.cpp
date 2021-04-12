@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <Eigen/Eigen>
 #include <Eigen/Geometry> 
-#include <Eigen/Core> 
+#include <Eigen/Core>
 
 
 #include <ros/ros.h>
@@ -47,15 +47,12 @@
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Int64.h>
 #include <std_msgs/Float64.h>
 #include <mavros_msgs/Thrust.h>
 #include <mavros_msgs/AttitudeTarget.h>
 #include <sensor_msgs/Imu.h>
 #include <geometry_msgs/TwistStamped.h>
-///sync
-//#include <message_filters/subscriber.h>
-//#include <message_filters/time_synchronizer.h>
-//#include <message_filters/sync_policies/approximate_time.h>
 
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
@@ -64,7 +61,6 @@
 #include <thread>
 #include <unistd.h>
 #include <mutex>
-#include "offb_posctl/controlstate.h"
 
 
 using namespace Eigen;//释放eigen命名空间 矩阵库
@@ -80,10 +76,9 @@ geometry_msgs::Quaternion orientation_target;   //发给无人机的姿态指令
 geometry_msgs::Vector3 angle_target;   //欧拉角
 geometry_msgs::Vector3 vel_target;   //期望速度
 geometry_msgs::Point plane_expected_position;
-std_msgs::Float64 plane_real_alt; //control前
 mavros_msgs::AttitudeTarget target_atti_thrust_msg; //最终发布的消息 油门+角度
-mavros_msgs::AttitudeTarget base_atti_thrust_msg; //最终发布的消息 油门+角度
 geometry_msgs::Vector3 angle_receive;
+std_msgs::Int64 counter;
 
 
 float thrust_target;        //期望推力
@@ -93,7 +88,9 @@ PID PIDVX, PIDVY, PIDVZ;    //声明PID类
 Parameter param;
 std::ofstream logfile;
 int controlfreq=25;//50;
-
+float init_pos_x = -0.5;
+float init_pos_y = -0.5;
+float init_pos_z = 0.5;
 
 ///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>声 明 函 数<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -106,7 +103,8 @@ int pix_controller(float cur_time);
 void vector3dLimit(Vector3d &v, double limit) ; ///limit should be positive
 Vector3d vectorElementMultiply(Vector3d v1, Vector3d v2);
 void data_log(std::ofstream &logfile, float cur_time, float ros_time);
-
+int ReadRowNumber(string fileway);
+void Readdata(string fileway,vector<vector<double>> &ans);
 ///>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>回 调 函 数<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 void state_cb(const mavros_msgs::State::ConstPtr &msg){
@@ -121,6 +119,7 @@ void plane_pos_cb(const geometry_msgs::PoseStamped::ConstPtr &msg){
 }
 void plane_imu_cb(const sensor_msgs::Imu::ConstPtr &msg){
     pose_drone_Imu = *msg;//pose_drone_odom是nav_msgs::Odometry类型
+	angle_receive = quaternion2euler(pose_drone_Imu.orientation.x, pose_drone_Imu.orientation.y, pose_drone_Imu.orientation.z, pose_drone_Imu.orientation.w);
 }
 
 void plane_vel_cb(const geometry_msgs::TwistStamped::ConstPtr &msg){
@@ -136,7 +135,6 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
 {
     ros::init(argc, argv, "position_control");//初始化节点名称
     ros::NodeHandle nh;
-
 
     ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>(
             "mavros/cmd/arming"); //使能解锁飞机  创建client对象并向arming发出请求，服务类型为CommandBool
@@ -155,9 +153,9 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
     ros::Subscriber pos_ref_sub  = nh.subscribe<geometry_msgs::PoseStamped>("/cmd/pos_ref", 10, ref_cb);
 
     // 【发布】
-    ros::Publisher target_atti_thrust_pub = nh.advertise<mavros_msgs::AttitudeTarget>("mavros/setpoint_raw/attitude",
-                                                                                      1);//发布给mavros的控制量(经过换算)
-
+    ros::Publisher target_atti_thrust_pub = nh.advertise<mavros_msgs::AttitudeTarget>("mavros/setpoint_raw/attitude",1);
+    ros::Publisher counter_pub = nh.advertise<std_msgs::Int64>("counter",1);
+	ros::Publisher actual_rpy_pub = nh.advertise<geometry_msgs::Vector3>("drone/current_rpy", 1);//飞机当前的rpy角
     ros::Rate rate(controlfreq);   //50hz的频率发送/接收topic  ros与pixhawk之间,50Hz control frequency
 
     // log输出文件初始化
@@ -175,7 +173,6 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
         return 0;
     }
 
-
     /// 设置速度环PID参数 比例参数 积分参数 微分参数
     PIDVX.setPID(param.vx_p, param.vx_i, param.vx_d);
     PIDVY.setPID(param.vy_p, param.vy_i, param.vy_d);
@@ -184,6 +181,17 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
     PIDVX.set_sat(6, 10, 0);
     PIDVY.set_sat(2, 3, 0);
     PIDVZ.set_sat(2, 5, 0);
+    cout<<"????????????????????????"<<endl;
+    /// 读取期望轨迹
+    ifstream fin_u1;// the instance can be used to read the file
+//    string fileway = "/home/uav/lzy_ws/src/offb_posctl/data/line.csv";
+//    string fileway = "/home/uav/lzy_ws/src/offb_posctl/data/screw.csv";
+    string fileway = "/home/uav/lzy_ws/src/offb_posctl/data/OG.csv";
+    int r = ReadRowNumber(fileway);
+    vector<vector<double>> trajectory(r, vector<double>(3, 0));
+    Readdata(fileway,trajectory);
+
+
 
     /// 等待和飞控的连接
     while (ros::ok() && current_state.connected == 0) {
@@ -193,10 +201,10 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
     }
     ROS_INFO("Connected!!");
 
-    angle_receive = quaternion2euler(pose_drone_Imu.orientation.x, pose_drone_Imu.orientation.y, pose_drone_Imu.orientation.z, pose_drone_Imu.orientation.w);
+//    angle_receive = quaternion2euler(pose_drone_Imu.orientation.x, pose_drone_Imu.orientation.y, pose_drone_Imu.orientation.z, pose_drone_Imu.orientation.w);
     Yaw_Init = angle_receive.z;
 
-    ///set initial hover position and pose
+//    ///set initial hover position and pose
     target_atti_thrust_msg.orientation.x = 0;
     target_atti_thrust_msg.orientation.y = 0;
     target_atti_thrust_msg.orientation.z = 0;
@@ -213,20 +221,12 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
     ROS_INFO("OUT OF LOOP WAIT");
 
 
-    /// change mode to arm ,then offboard 发出请求
-    mavros_msgs::CommandBool arm_cmd; //解锁
-    mavros_msgs::SetMode offb_set_mode;
-    offb_set_mode.request.custom_mode = "OFFBOARD";
-    arm_cmd.request.value = true;
-
-    ros::Time last_request = ros::Time::now();
-
-    ///解锁飞机
+    ///------------------------------等待解锁飞机--------------------------------//
     while(ros::ok() && current_state.mode != "OFFBOARD")
     {
-        plane_expected_position.x = 0;
-        plane_expected_position.y = 0;
-        plane_expected_position.z = 0.5;
+        plane_expected_position.x = init_pos_x;
+        plane_expected_position.y = init_pos_y;
+        plane_expected_position.z = init_pos_z;
         pix_controller(0);
         target_atti_thrust_msg.header.stamp = ros::Time::now();
         target_atti_thrust_msg.orientation = orientation_target;
@@ -243,32 +243,29 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
         rate.sleep();
         ROS_INFO("Not OFFBOARD");
     }
-
-    /// reach initial hover position and pose by position control
+    ///------------------------------------------------------------------------//
+    ///------------------------------- hover initial ---------------------------//
     ros::Time begin_time_01 = ros::Time::now();
-    int count = 400;
-    vector<float> orientation_x;
-    vector<float> orientation_y;
-    vector<float> orientation_z;
-    vector<float> orientation_w;
     got_initial_point = true;
-    base_atti_thrust_msg.thrust = 0.57;
-    // hover
-    while (ros::ok())
+    int count = 0;
+    while (ros::ok()&&(count<15*controlfreq||abs(pose_drone_odom.pose.position.x-init_pos_x)>=0.1))
     {
         cout << "------------Hovering----------------" << endl;
         ros::spinOnce();
-        cout << "plane_vel.x:" << vel_drone.twist.linear.x << endl;
+//        cout << "plane_vel.x:" << vel_drone.twist.linear.x << endl;
         cout << "plane_pos.x:" << pose_drone_odom.pose.position.x << endl;
-
         float cur_time_01 = get_ros_time(begin_time_01);  // 相对时间
-        plane_expected_position.x = 0;
-        plane_expected_position.y = 0;
-        plane_expected_position.z = 0.8;
-//        plane_expected_position.x = pos_ref.pose.position.x;
-//        plane_expected_position.y = pos_ref.pose.position.y;
-//        plane_expected_position.z = pos_ref.pose.position.z;
-
+        if (count<10*controlfreq)
+        {
+            plane_expected_position.x = 0;
+            plane_expected_position.y = 0;
+            plane_expected_position.z = init_pos_z;
+        } else{
+            plane_expected_position.x = init_pos_x;
+            plane_expected_position.y = init_pos_y;
+            plane_expected_position.z = init_pos_z;
+        }
+        cout<<"plane_expected_position.x"<<plane_expected_position.x<<" plane_expected_position.y"<<plane_expected_position.y<<" plane_expected_position.z"<<plane_expected_position.z<<endl;
         pix_controller(cur_time_01);
         target_atti_thrust_msg.orientation = orientation_target;
         if(thrust_target>0.58)
@@ -279,15 +276,59 @@ int main(int argc, char **argv)//argc  argument count 传参个数，argument va
         std::cout << "thrust_target:  " << thrust_target << std::endl;
         std::cout << "Yaw_Init:  " << Yaw_Init << std::endl;
         target_atti_thrust_pub.publish(target_atti_thrust_msg);
-        rate.sleep();//休息
-
-        count += 1;
-        if (count >= 400)//count到达500以后,不会再增加
-        {
-            cout << "You can run Waffle pi!" << endl;
-        }
-
+        counter.data = count;
+        counter_pub.publish(counter);
+        count = count + 1;
+		actual_rpy_pub.publish(angle_receive);
+        rate.sleep();
     }
+    ///------------------------------------------------------------------------//
+
+    ///------------------------------- trajectory follow ---------------------------//
+    count = 0;
+    begin_time_01 = ros::Time::now();
+    while (ros::ok())
+    {
+        cout << "------------Follow----------------" << endl;
+        ros::spinOnce();
+        cout << "plane_pos.x:" << pose_drone_odom.pose.position.x << endl;
+        if (count<r)
+        {
+            plane_expected_position.x = trajectory[count][0];
+            plane_expected_position.y = trajectory[count][1];
+            plane_expected_position.z = trajectory[count][2];
+        }
+        else if ((count < r+5*controlfreq)&&(count>=r))
+        {
+            plane_expected_position.x = trajectory[r-1][0];
+            plane_expected_position.y = trajectory[r-1][1];
+            plane_expected_position.z = trajectory[r-1][2];
+        } else
+        {
+            plane_expected_position.x = trajectory[r-1][0];
+            plane_expected_position.y = trajectory[r-1][1];
+            plane_expected_position.z = 0.2;
+        }
+        cout<<"plane_expected_position.x"<<plane_expected_position.x<<" plane_expected_position.y"<<plane_expected_position.y<<" plane_expected_position.z"<<plane_expected_position.z<<endl;
+
+        float cur_time_01 = get_ros_time(begin_time_01);  // 相对时间
+        pix_controller(cur_time_01);
+        target_atti_thrust_msg.orientation = orientation_target;
+        if(thrust_target>0.58)
+        {
+            thrust_target = 0.58;
+        }
+        target_atti_thrust_msg.thrust = thrust_target;
+        std::cout << "thrust_target:  " << thrust_target << std::endl;
+        target_atti_thrust_pub.publish(target_atti_thrust_msg);
+        counter.data = count;
+        counter_pub.publish(counter);
+        count = count + 1;
+		actual_rpy_pub.publish(angle_receive);
+//        cout<<"count"<<count<<endl;
+        rate.sleep();
+    }
+    ///------------------------------------------------------------------------//
 
     logfile.close();
     return 0;
@@ -430,4 +471,44 @@ void data_log(std::ofstream &logfile, float cur_time, float ros_time)
 {
     logfile<<cur_time<<endl;
 
+}
+/**
+ * 获得csv文件的行数，返回r
+ */
+int ReadRowNumber(string fileway)
+{
+    ifstream fin_u1;// the instance can be used to read the file
+    string line; //used for store the one line data from csv temporarily
+    int r = 0;
+    fin_u1.open(fileway);// the directory of th data.csv
+    while (!fin_u1.eof()) {// juddge whether the fin reach the end line of the csv file
+        fin_u1 >> line;// read one line data to "line"
+        fin_u1 >> line;// read one line data to "line"
+        fin_u1 >> line;// read one line data to "line"
+        r++;
+    }
+    fin_u1.close();
+    return r;
+}
+/**
+ * 读取csv文件为vector类型
+ */
+void Readdata(string fileway,vector<vector<double>> &ans)
+{
+    ifstream fin_u1;// the instance can be used to read the file
+    string line; //used for store the one line data from csv temporarily
+    int index = 0;
+    fin_u1.open(fileway);// the directory of th data.csv
+    while (!fin_u1.eof())
+    {// juddge whether the fin reach the end line of the csv file
+        fin_u1 >> line;// read one line data to "line"
+        ans[index][0]= atof(line.c_str());
+        fin_u1 >> line;
+        ans[index][1]=atof(line.c_str());
+        fin_u1 >> line;
+        ans[index][2]=atof(line.c_str());
+        cout<<ans[index][2]<<endl;
+        index++;
+    }
+    fin_u1.close();
 }
